@@ -41,12 +41,14 @@
     "heroTitle": "50 years ago",
     "heroBody": "Light, water, air, nutrients and time are all set by us. The strawberry was only the first thing we proved it on.",
     "exploreNow": "Explore now",
-    "prologue": "We didn’t find a place where strawberries grow. We built one at sea level in West Jakarta, and recorded every condition it took. That record is the asset. A highland farm’s advantage ends at its property line. Ours is a specification. It can be built again, closer to the people who need it.",
-    "techKicker": "The system",
+    "prologue": "Highland farms borrow their conditions from altitude. We build ours at sea level in West Jakarta, where a strawberry has no business surviving. That is the difference between a good location and a working system.",
+    "lightTitle": "Light",
+    "lightBody": "Spectrum and photoperiod set per growth stage. Sunrise happens when the plant needs it.",
+    "techKicker": "Farming Technology",
     "techTitle": "Every outcome, by design",
     "techBody": "Irrigation meets sensor. Heat and harvest data from every cycle since commissioning. We built one of these rooms. Then asked how a strawberry has no business appearing. That is the difference between a greenhouse and a working system.",
     "today": "Today",
-    "portalsKicker": "Three rooms",
+    "portalsKicker": "Research, Cultivation, and Harvest",
     "seeJournals": "See all journals",
     "journalsIntro": "A working facility at sea level in West Jakarta, with harvest data from every cycle since commissioning. What we have proven here is not a crop — it is a method for building growing conditions where geography says they shouldn’t exist. That method scales by replication, not by acquisition of land. We’re open to conversations about capital, capacity, and where the second site goes.",
     "partnerKicker": "Be part of us",
@@ -57,7 +59,7 @@
     "careersTitle": "Join the future of farming with SooFresh",
     "careersBody": "The rooms are small. The work is precise. Cultivation, research, and the people who keep the specification honest.",
     "careersCta": "See open roles",
-    "socialTitle": "SooFresh and our journey begins together"
+    "socialTitle": "Connect easily with Soofresh and our journey"
   },
   "common": {
     "back": "Back",

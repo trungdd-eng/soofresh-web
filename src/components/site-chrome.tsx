@@ -31,7 +31,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const site = getSite(locale);
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [compact, setCompact] = useState(false);
+  const [solidBar, setSolidBar] = useState(false);
   const [newsletter, setNewsletter] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -39,8 +39,21 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     let last = window.scrollY;
     const onScroll = () => {
       const y = window.scrollY;
-      setCompact(y > 48);
-      setHidden(overlay && y > last && y > 180);
+      if (Math.abs(y - last) < 8 && y > 24) return;
+      const down = y >= last;
+      if (!overlay) {
+        setHidden(false);
+        setSolidBar(true);
+      } else if (y < 24) {
+        setHidden(false);
+        setSolidBar(false);
+      } else if (down) {
+        setHidden(false);
+        setSolidBar(true);
+      } else {
+        setHidden(true);
+        setSolidBar(true);
+      }
       last = y;
     };
     onScroll();
@@ -55,7 +68,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     };
   }, [open]);
 
-  const solid = !overlay || compact || open;
+  const solid = !overlay || solidBar || open;
   const headline = site.journals[0];
 
   return (
@@ -63,7 +76,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <header
         className={`fixed inset-x-0 top-0 z-40 transition duration-300 ${
           hidden && !open ? "-translate-y-full" : "translate-y-0"
-        } ${solid ? "bg-paper/95 text-ink shadow-[0_1px_0_rgba(0,0,0,0.06)] backdrop-blur" : "bg-transparent text-ink"}`}
+        } ${solid ? "bg-paper text-ink" : "bg-transparent text-ink"}`}
       >
         <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-4 md:h-20 md:px-10">
           <button
@@ -82,11 +95,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
             <LeafMark />
           </Link>
           <div className="ml-auto flex items-center gap-3 md:gap-5">
-            <JakartaClock className="hidden text-[11px] tracking-wide opacity-80 sm:block" />
-            <Link href="/basket" className="text-sm">
-              {t("nav.basket")}
-              {cartCount > 0 ? ` (${cartCount})` : ""}
-            </Link>
+            <JakartaClock className="hidden text-[11px] tracking-wide text-ink sm:block" />
             <Link
               href={customer ? "/account" : "/sign-in"}
               className={`px-3 py-2 text-sm ${solid ? "bg-brand text-white" : "bg-brand text-white"}`}
@@ -155,13 +164,23 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
                     </Link>
                   </>
                 ) : (
-                  <Link
-                    href="/sign-in"
-                    onClick={() => setOpen(false)}
-                    className="mt-6 inline-flex w-fit bg-brand px-4 py-2.5 text-sm text-white"
-                  >
-                    {t("nav.signIn")}
-                  </Link>
+                  <>
+                    <Link
+                      href="/basket"
+                      onClick={() => setOpen(false)}
+                      className="border-b border-line py-3 text-3xl tracking-tight md:text-4xl"
+                    >
+                      {t("nav.basket")}
+                      {cartCount > 0 ? ` (${cartCount})` : ""}
+                    </Link>
+                    <Link
+                      href="/sign-in"
+                      onClick={() => setOpen(false)}
+                      className="mt-6 inline-flex w-fit bg-brand px-4 py-2.5 text-sm text-white"
+                    >
+                      {t("nav.signIn")}
+                    </Link>
+                  </>
                 )}
                 <div className="mt-8 flex gap-3 text-sm">
                   <span className="text-muted">{t("nav.language")}</span>
@@ -192,13 +211,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
           <div className="mx-auto grid max-w-[1440px] gap-8 px-5 py-16 md:grid-cols-[1.2fr_1fr] md:px-16">
             <div>
               <h2 className="max-w-md text-3xl leading-tight font-medium md:text-4xl">
-                {t("home.socialTitle")}
+                {t("footer.newsletterTitle")}
               </h2>
-              <div className="mt-8 grid grid-cols-3 gap-2">
-                {[site.images.flower, site.images.harvest, site.images.aisle].map((src) => (
-                  <img key={src} src={src} alt="" className="aspect-square object-cover" />
-                ))}
-              </div>
+              <p className="mt-3 max-w-sm text-sm text-white/80">{t("footer.newsletterBody")}</p>
             </div>
             <form
               className="self-end"
@@ -211,10 +226,6 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
                 setSubscribed(true);
               }}
             >
-              <p className="text-xs tracking-[0.18em] uppercase opacity-70">
-                {t("footer.newsletterTitle")}
-              </p>
-              <p className="mt-3 max-w-sm text-sm text-white/80">{t("footer.newsletterBody")}</p>
               {subscribed ? (
                 <p className="mt-4 text-sm">{t("footer.subscribed")}</p>
               ) : (

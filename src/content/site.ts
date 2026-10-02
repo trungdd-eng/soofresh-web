@@ -41,6 +41,8 @@ export type Role = {
 
 const images = {
   hero: "/images/figma/hero-clean.jpg",
+  heroVideo: "/videos/hero.mp4",
+  facility: "/images/figma/facility.png",
   field: "/images/figma/field.jpg",
   flower: "/images/figma/flower.jpg",
   harvest: "/images/figma/harvest.jpg",
@@ -56,25 +58,25 @@ const en = {
   images,
   techSlides: [
     {
-      id: "climate",
-      tab: "Climate",
-      title: "The room decides the weather",
-      body: "Temperature, humidity, and airflow are set points, not hopes. The curve on this page follows the hour in Jakarta.",
-      image: images.hero,
-    },
-    {
       id: "vertical",
-      tab: "Vertical farming",
-      title: "Vertical farming",
-      body: "Stacked gutters, the same recipe on every tier. Density without borrowing a hillside.",
+      tab: "Vertical Farming",
+      title: "Vertical Farming",
+      body: "A vertical layered growing method that maximizes planting space and ensures each plant grows optimally in a fully controlled environment.",
       image: images.vertical,
     },
     {
-      id: "nutrient",
-      tab: "Nutrient system",
-      title: "Nutrient system",
-      body: "Dosing pumps, logged every cycle. What the plant received is a record, not a guess.",
+      id: "hydroponic",
+      tab: "Hydroponic System",
+      title: "Hydroponic System",
+      body: "Plants are grown in a specialized substrate with their roots immersed in a nutrient solution formulated to meet the needs of each growth stage, resulting fresher, sweeter and constant high quality harvest.",
       image: images.nutrient,
+    },
+    {
+      id: "environment",
+      tab: "Environment Control",
+      title: "Environment Control",
+      body: "An innovative approach to agriculture that optimizes space utilization and creates ideal conditions for plant growth, ensuring each crop thrives in a meticulously regulated environment.",
+      image: images.hero,
     },
   ],
   portals: [
@@ -83,7 +85,7 @@ const en = {
       eyebrow: "Research",
       title: "The Lab",
       body: "Where the specification is written, and rewritten, against the harvest.",
-      image: images.nutrient,
+      image: images.storage,
       cta: "Visit lab",
     },
     {
@@ -91,7 +93,7 @@ const en = {
       eyebrow: "Cultivation",
       title: "The Farm",
       body: "A working facility at sea level. The plants do not know they are in West Jakarta.",
-      image: images.aisle,
+      image: images.vertical,
       cta: "Explore farm",
     },
     {
@@ -576,25 +578,25 @@ const id: typeof en = {
   ...en,
   techSlides: [
     {
-      id: "climate",
-      tab: "Iklim",
-      title: "Ruangan yang memutuskan cuaca",
-      body: "Suhu, kelembapan, dan aliran udara adalah set point, bukan harapan. Kurva di halaman ini mengikuti jam di Jakarta.",
-      image: images.hero,
-    },
-    {
       id: "vertical",
-      tab: "Vertical farming",
-      title: "Vertical farming",
-      body: "Talang bertingkat, resep yang sama di setiap tingkat. Kepadatan tanpa meminjam lereng.",
+      tab: "Vertical Farming",
+      title: "Vertical Farming",
+      body: "Metode tanam berlapis vertikal yang memaksimalkan ruang tanam dan memastikan setiap tanaman tumbuh optimal di lingkungan yang sepenuhnya terkendali.",
       image: images.vertical,
     },
     {
-      id: "nutrient",
-      tab: "Sistem nutrisi",
-      title: "Sistem nutrisi",
-      body: "Pompa dosing, tercatat setiap siklus. Yang diterima tanaman adalah catatan, bukan tebakan.",
+      id: "hydroponic",
+      tab: "Sistem Hidroponik",
+      title: "Sistem Hidroponik",
+      body: "Tanaman tumbuh pada substrat khusus dengan akar terendam larutan nutrisi yang diracik untuk setiap tahap tumbuh, menghasilkan panen yang lebih segar, lebih manis, dan konsisten.",
       image: images.nutrient,
+    },
+    {
+      id: "environment",
+      tab: "Kendali Lingkungan",
+      title: "Kendali Lingkungan",
+      body: "Pendekatan pertanian yang mengoptimalkan penggunaan ruang dan menciptakan kondisi ideal bagi pertumbuhan tanaman, sehingga setiap tanaman berkembang di lingkungan yang diatur dengan cermat.",
+      image: images.hero,
     },
   ],
   portals: [
@@ -603,7 +605,7 @@ const id: typeof en = {
       eyebrow: "Riset",
       title: "The Lab",
       body: "Tempat spesifikasi ditulis, dan ditulis ulang, berhadapan dengan panen.",
-      image: images.nutrient,
+      image: images.storage,
       cta: "Kunjungi lab",
     },
     {
@@ -611,7 +613,7 @@ const id: typeof en = {
       eyebrow: "Kultivasi",
       title: "The Farm",
       body: "Fasilitas yang bekerja di permukaan laut. Tanamannya tidak tahu mereka di Jakarta Barat.",
-      image: images.aisle,
+      image: images.vertical,
       cta: "Jelajahi farm",
     },
     {
