@@ -62,16 +62,36 @@ function HexCell() {
 }
 
 function HexagonBand() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shift, setShift] = useState(0.15);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const node = ref.current;
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      const start = window.innerHeight * 0.95;
+      const end = window.innerHeight * 0.2;
+      const progress = (start - rect.top) / (start - end);
+      setShift(Math.min(1, Math.max(0, progress)));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <div className="overflow-hidden py-10" aria-hidden="true">
-      <div className="hex-track flex w-[200%]">
-        {Array.from({ length: 2 }).map((_, copy) => (
-          <div key={copy} className="flex w-1/2 gap-3 px-1">
-            {Array.from({ length: 18 }).map((_, index) => (
-              <div key={index} className={index % 2 ? "mt-8" : ""}>
-                <HexCell />
-              </div>
-            ))}
+    <div ref={ref} className="overflow-hidden py-10" aria-hidden="true">
+      <div
+        className="flex w-[180%] gap-3 will-change-transform"
+        style={{
+          transform: `translateX(${(1 - shift) * 38}%)`,
+          clipPath: `inset(0 0 0 ${(1 - shift) * 62}%)`,
+        }}
+      >
+        {Array.from({ length: 22 }).map((_, index) => (
+          <div key={index} className={index % 2 ? "mt-8" : ""}>
+            <HexCell />
           </div>
         ))}
       </div>
@@ -94,8 +114,28 @@ function FacilityImage({ src, fallback }: { src: string; fallback: string }) {
   );
 }
 
-function HeroMedia({ poster }: { poster: string }) {
-  return <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover" />;
+function HeroMedia({ poster, video }: { poster: string; video: string }) {
+  const [useVideo, setUseVideo] = useState(true);
+
+  return useVideo ? (
+    <video
+      className="absolute inset-0 h-full w-full object-cover"
+      autoPlay
+      muted
+      loop
+      playsInline
+      poster={poster}
+      onError={() => setUseVideo(false)}
+    >
+      <source src={video} type="video/mp4" />
+    </video>
+  ) : (
+    <img
+      src={poster}
+      alt=""
+      className="absolute inset-0 h-full w-full object-cover"
+    />
+  );
 }
 
 export function HomePage() {
@@ -185,7 +225,7 @@ export function HomePage() {
   return (
     <div>
       <section className="relative min-h-[100svh] overflow-hidden text-white">
-        <HeroMedia poster={site.images.hero} />
+        <HeroMedia poster={site.images.hero} video={site.images.heroVideo} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/15" />
         <div className="relative mx-auto flex min-h-[100svh] max-w-[1440px] flex-col justify-end px-5 pt-28 pb-10 md:px-16 md:pb-14">
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -235,7 +275,7 @@ export function HomePage() {
         <div
           ref={lightRef}
           className="relative mx-auto mt-16 max-w-4xl transition-opacity duration-300"
-          style={{ opacity: 0.25 + lightOpacity * 0.75 }}
+          style={{ opacity: lightOpacity }}
         >
           <svg viewBox="0 0 1000 210" className="w-full">
             <path
@@ -465,23 +505,30 @@ export function HomePage() {
             {t("socialTitle")}
           </h2>
           <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
-            {socialImages.map((src, index) => (
-              <motion.img
-                key={src}
-                src={src}
-                alt=""
-                className="aspect-square w-full object-cover"
-                initial={{ scale: 0.55, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: false, amount: 0.45 }}
-                transition={{
-                  duration: 0.7,
-                  delay: index * 0.08,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                style={{ transformOrigin: "center" }}
-              />
-            ))}
+            {socialImages.map((src, index) => {
+              const center = (socialImages.length - 1) / 2;
+              return (
+                <motion.img
+                  key={src}
+                  src={src}
+                  alt=""
+                  className="aspect-square w-full object-cover"
+                  initial={{
+                    scale: 0.12,
+                    opacity: 0,
+                    x: `${(center - index) * 55}%`,
+                  }}
+                  whileInView={{ scale: 1, opacity: 1, x: 0 }}
+                  viewport={{ once: false, amount: 0.4 }}
+                  transition={{
+                    duration: 0.85,
+                    delay: Math.abs(index - center) * 0.08,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  style={{ transformOrigin: "center" }}
+                />
+              );
+            })}
           </div>
         </div>
       </section>

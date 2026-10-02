@@ -296,9 +296,47 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
             ))}
           </div>
         </div>
-        <p className="overflow-hidden px-4 pb-6 text-center text-[18vw] leading-none font-medium tracking-tight text-brand md:text-[12rem]">
-          Soofresh
-        </p>
+        <div className="relative overflow-hidden bg-paper">
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            src={site.images.footerVideo}
+          />
+          <svg
+            className="relative block h-auto w-full"
+            viewBox="0 0 1440 430"
+            role="img"
+            aria-label="Soofresh"
+          >
+            <defs>
+              <mask id="soofresh-wordmark">
+                <rect width="1440" height="430" fill="white" />
+                <text
+                  x="720"
+                  y="318"
+                  textAnchor="middle"
+                  fill="black"
+                  fontSize="292"
+                  fontWeight="500"
+                  letterSpacing="-8"
+                  fontFamily="var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif"
+                >
+                  Soofresh
+                </text>
+              </mask>
+            </defs>
+            <rect
+              width="1440"
+              height="430"
+              fill="#f9f9f9"
+              mask="url(#soofresh-wordmark)"
+            />
+          </svg>
+        </div>
         <p className="px-5 pb-8 text-center text-xs text-muted">{t("footer.rights")}</p>
       </footer>
     </>

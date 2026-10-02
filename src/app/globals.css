@@ -38,25 +38,8 @@ body {
   background: #dfe6bf;
 }
 
-@keyframes hex-drift {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.hex-track {
-  animation: hex-drift 42s linear infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .hex-track {
-    animation: none;
   }
 }

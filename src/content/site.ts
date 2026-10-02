@@ -41,6 +41,8 @@ export type Role = {
 
 const images = {
   hero: "/images/figma/hero.png",
+  heroVideo: "/videos/hero.mp4",
+  footerVideo: "/videos/footer.mp4",
   facility: "/images/figma/facility.png",
   field: "/images/figma/field.jpg",
   flower: "/images/figma/flower.jpg",
