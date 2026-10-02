@@ -94,28 +94,8 @@ function FacilityImage({ src, fallback }: { src: string; fallback: string }) {
   );
 }
 
-function HeroMedia({ poster, video }: { poster: string; video: string }) {
-  const [useVideo, setUseVideo] = useState(true);
-
-  return useVideo ? (
-    <video
-      className="absolute inset-0 h-full w-full object-cover"
-      autoPlay
-      muted
-      loop
-      playsInline
-      poster={poster}
-      onError={() => setUseVideo(false)}
-    >
-      <source src={video} type="video/mp4" />
-    </video>
-  ) : (
-    <img
-      src={poster}
-      alt=""
-      className="hero-drift absolute inset-0 h-full w-full object-cover"
-    />
-  );
+function HeroMedia({ poster }: { poster: string }) {
+  return <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover" />;
 }
 
 export function HomePage() {
@@ -205,7 +185,7 @@ export function HomePage() {
   return (
     <div>
       <section className="relative min-h-[100svh] overflow-hidden text-white">
-        <HeroMedia poster={site.images.hero} video={site.images.heroVideo} />
+        <HeroMedia poster={site.images.hero} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/15" />
         <div className="relative mx-auto flex min-h-[100svh] max-w-[1440px] flex-col justify-end px-5 pt-28 pb-10 md:px-16 md:pb-14">
           <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -420,7 +400,7 @@ export function HomePage() {
       <section className="mx-auto grid max-w-[1440px] items-stretch gap-0 px-5 py-10 md:grid-cols-2 md:px-16">
         <div className="relative min-h-[440px]">
           <img
-            src={site.images.storage}
+            src={site.images.partner}
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
           />

@@ -47,22 +47,8 @@ body {
   }
 }
 
-@keyframes hero-drift {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.08);
-  }
-}
-
 .hex-track {
   animation: hex-drift 42s linear infinite;
-}
-
-.hero-drift {
-  animation: hero-drift 28s ease-in-out infinite alternate;
-  transform-origin: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -70,8 +56,7 @@ body {
     scroll-behavior: auto;
   }
 
-  .hex-track,
-  .hero-drift {
+  .hex-track {
     animation: none;
   }
 }

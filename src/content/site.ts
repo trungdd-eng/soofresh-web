@@ -40,16 +40,18 @@ export type Role = {
 };
 
 const images = {
-  hero: "/images/figma/hero-clean.jpg",
-  heroVideo: "/videos/hero.mp4",
+  hero: "/images/figma/hero.png",
   facility: "/images/figma/facility.png",
   field: "/images/figma/field.jpg",
   flower: "/images/figma/flower.jpg",
   harvest: "/images/figma/harvest.jpg",
   vertical: "/images/figma/vertical.jpg",
-  nutrient: "/images/figma/nutrient.png",
+  hydroponic: "/images/figma/hydroponic.jpg",
+  environment: "/images/figma/environment.jpg",
+  nutrient: "/images/figma/nutrient.jpg",
   aisle: "/images/figma/team-aisle.jpg",
   storage: "/images/figma/team-storage.jpg",
+  partner: "/images/figma/partner.jpg",
   hypermart: "/images/figma/logo-hypermart.png",
   mykonos: "/images/figma/logo-mykonos.png",
 };
@@ -69,14 +71,14 @@ const en = {
       tab: "Hydroponic System",
       title: "Hydroponic System",
       body: "Plants are grown in a specialized substrate with their roots immersed in a nutrient solution formulated to meet the needs of each growth stage, resulting fresher, sweeter and constant high quality harvest.",
-      image: images.nutrient,
+      image: images.hydroponic,
     },
     {
       id: "environment",
       tab: "Environment Control",
       title: "Environment Control",
       body: "An innovative approach to agriculture that optimizes space utilization and creates ideal conditions for plant growth, ensuring each crop thrives in a meticulously regulated environment.",
-      image: images.hero,
+      image: images.environment,
     },
   ],
   portals: [
@@ -589,14 +591,14 @@ const id: typeof en = {
       tab: "Sistem Hidroponik",
       title: "Sistem Hidroponik",
       body: "Tanaman tumbuh pada substrat khusus dengan akar terendam larutan nutrisi yang diracik untuk setiap tahap tumbuh, menghasilkan panen yang lebih segar, lebih manis, dan konsisten.",
-      image: images.nutrient,
+      image: images.hydroponic,
     },
     {
       id: "environment",
       tab: "Kendali Lingkungan",
       title: "Kendali Lingkungan",
       body: "Pendekatan pertanian yang mengoptimalkan penggunaan ruang dan menciptakan kondisi ideal bagi pertumbuhan tanaman, sehingga setiap tanaman berkembang di lingkungan yang diatur dengan cermat.",
-      image: images.hero,
+      image: images.environment,
     },
   ],
   portals: [

@@ -106,7 +106,7 @@ export function ContactView() {
     >
       <div>
         <h1 className="text-4xl font-medium md:text-6xl">{labels.title}</h1>
-        <img src="/images/figma/hero-clean.jpg" alt="" className="mt-8 hidden aspect-[4/3] object-cover md:block" />
+        <img src="/images/figma/hero.png" alt="" className="mt-8 hidden aspect-[4/3] object-cover md:block" />
       </div>
       <div className="space-y-3">
         <input required name="name" placeholder={labels.name} className="w-full border border-line bg-white px-3 py-3" />
