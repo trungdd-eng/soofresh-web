@@ -1,0 +1,8 @@
+import { setRequestLocale } from "next-intl/server";
+import { SignInView } from "@/components/auth-views";
+
+export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  return <SignInView mode="up" />;
+}

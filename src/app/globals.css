@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f9f9f9;
+  --ink: #1c1c1c;
+  --muted: #5c5c5c;
+  --line: #e4e4e4;
+  --brand: #84943a;
+  --brand-dark: #5f6c2c;
+  --bronze: #6d5a32;
+  --moss: #1c291c;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-bronze: var(--bronze);
+  --color-moss: var(--moss);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #dfe6bf;
+}
+
+@keyframes hex-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.hex-track {
+  animation: hex-drift 36s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hex-track {
+    animation: none;
+  }
+}

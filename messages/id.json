@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "SooFresh",
+    "description": "Stroberi yang tumbuh di permukaan laut, di Jakarta Barat. Sebuah metode, bukan gunung."
+  },
+  "nav": {
+    "signIn": "Masuk",
+    "menu": "Menu",
+    "close": "Tutup",
+    "basket": "Keranjang",
+    "account": "Akun saya",
+    "language": "Bahasa",
+    "newUpdate": "Pembaruan baru"
+  },
+  "menu": {
+    "home": "Beranda",
+    "farm": "The Farm",
+    "lab": "The Lab",
+    "harvest": "The Harvest",
+    "journals": "Jurnal",
+    "products": "Produk",
+    "careers": "Karier",
+    "faq": "FAQ",
+    "contact": "Kontak"
+  },
+  "footer": {
+    "newsletterTitle": "Catatan dari fasilitas",
+    "newsletterBody": "Catatan panen, riset, dan sesekali undangan. Tanpa kebisingan.",
+    "email": "Alamat email",
+    "subscribe": "Berlangganan",
+    "subscribed": "Anda sudah masuk daftar.",
+    "explore": "Jelajahi",
+    "company": "Perusahaan",
+    "legal": "Legal",
+    "privacy": "Kebijakan privasi",
+    "terms": "Syarat dan ketentuan",
+    "sale": "Syarat penjualan",
+    "rights": "SooFresh. Tumbuh di Jakarta Barat."
+  },
+  "home": {
+    "heroTitle": "50 tahun lalu",
+    "heroBody": "Cahaya, air, udara, nutrisi, dan waktu semuanya kami atur. Stroberi hanyalah hal pertama yang kami buktikan.",
+    "exploreNow": "Jelajahi sekarang",
+    "prologue": "Kami tidak menemukan tempat di mana stroberi tumbuh. Kami membangunnya di permukaan laut, di Jakarta Barat, dan mencatat setiap kondisi yang dibutuhkan. Catatan itulah asetnya. Keunggulan kebun dataran tinggi berhenti di batas lahannya. Milik kami adalah sebuah spesifikasi. Ia bisa dibangun lagi, lebih dekat dengan orang yang membutuhkannya.",
+    "techKicker": "Sistemnya",
+    "techTitle": "Setiap hasil, by design",
+    "techBody": "Irigasi bertemu sensor. Panas dan data panen dari setiap siklus sejak fasilitas ini dinyalakan. Kami membangun satu ruangan. Lalu bertanya bagaimana stroberi bisa muncul di tempat yang tidak semestinya. Itulah bedanya rumah kaca dan sistem yang bekerja.",
+    "today": "Hari ini",
+    "portalsKicker": "Tiga ruang",
+    "seeJournals": "Lihat semua jurnal",
+    "journalsIntro": "Sebuah fasilitas yang bekerja di permukaan laut, di Jakarta Barat, dengan data panen dari setiap siklus sejak commissioning. Yang kami buktikan di sini bukan tanaman — melainkan metode membangun kondisi tumbuh di tempat geografi berkata seharusnya tidak ada. Metode itu berkembang dengan replikasi, bukan dengan membeli lahan. Kami terbuka untuk percakapan tentang modal, kapasitas, dan di mana lokasi kedua akan berdiri.",
+    "partnerKicker": "Jadi bagian dari kami",
+    "partnerTitle": "Fasilitas berikutnya tidak butuh gunung",
+    "partnerBody": "Kami tidak menemukan tempat di mana stroberi tumbuh. Kami membangunnya di permukaan laut, di Jakarta Barat, dan mencatat setiap kondisi yang dibutuhkan. Catatan itu adalah asetnya — keunggulan kebun dataran tinggi berhenti di garis propertinya. Milik kami adalah spesifikasi. Ia bisa dibangun lagi, lebih dekat dengan orang yang membutuhkannya.",
+    "invest": "Investasi bersama kami",
+    "visit": "Atur kunjungan",
+    "careersTitle": "Ikut membangun masa depan pertanian bersama SooFresh",
+    "careersBody": "Ruangannya kecil. Pekerjaannya presisi. Kultivasi, riset, dan orang-orang yang menjaga spesifikasi tetap jujur.",
+    "careersCta": "Lihat lowongan",
+    "socialTitle": "SooFresh dan perjalanan kita dimulai bersama"
+  },
+  "common": {
+    "back": "Kembali",
+    "continue": "Lanjutkan",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "edit": "Ubah",
+    "remove": "Hapus",
+    "loading": "SooFresh",
+    "required": "Wajib",
+    "or": "atau",
+    "google": "Lanjutkan dengan Google",
+    "idr": "IDR"
+  }
+}
