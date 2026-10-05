@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root {
+:root,
+[data-theme="day"] {
   --paper: #f9f9f9;
   --ink: #1c1c1c;
   --muted: #5c5c5c;
@@ -9,7 +10,19 @@
   --brand-dark: #5d6952;
   --bronze: #6d5a32;
   --moss: #1c291c;
+  --fill-ink: #131518;
+  --fill-track: #c5c9d2;
   color-scheme: light;
+}
+
+[data-theme="night"] {
+  --paper: #131518;
+  --ink: #f3f4f6;
+  --muted: #a3a9b7;
+  --line: #2a2e33;
+  --fill-ink: #f4f6f8;
+  --fill-track: #5c6570;
+  color-scheme: dark;
 }
 
 @theme inline {

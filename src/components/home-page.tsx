@@ -7,20 +7,6 @@ import { getSite } from "@/content/site";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
-function jakartaMinutes(date = new Date()) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Jakarta",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(date);
-  const hour = Number(parts.find((part) => part.type === "hour")?.value ?? "0");
-  const minute = Number(
-    parts.find((part) => part.type === "minute")?.value ?? "0",
-  );
-  return hour * 60 + minute;
-}
-
 function arcPoint(t: number) {
   const p0 = { x: 48, y: 168 };
   const p1 = { x: 500, y: 18 };
@@ -114,6 +100,45 @@ function FacilityImage({ src, fallback }: { src: string; fallback: string }) {
   );
 }
 
+function CelestialArc() {
+  const [progress, setProgress] = useState(0);
+  const [night, setNight] = useState(false);
+
+  useEffect(() => {
+    let frame = 0;
+    const loop = (now: number) => {
+      setProgress((now % 12000) / 12000);
+      frame = requestAnimationFrame(loop);
+    };
+    frame = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    const read = () => setNight(document.documentElement.dataset.theme === "night");
+    read();
+    window.addEventListener("soofresh-theme", read);
+    return () => window.removeEventListener("soofresh-theme", read);
+  }, []);
+
+  const point = arcPoint(progress);
+
+  return (
+    <svg viewBox="0 0 1000 210" className="w-full overflow-visible" aria-hidden="true">
+      <path
+        d="M48 168 Q 500 18 952 168"
+        fill="none"
+        stroke="currentColor"
+        strokeOpacity="0.45"
+        strokeDasharray="2 7"
+        strokeLinecap="round"
+      />
+      <circle cx={point.x} cy={point.y} r="34" fill={night ? "#9aa8bc" : "#f6c453"} opacity="0.45" />
+      <circle cx={point.x} cy={point.y} r="16" fill={night ? "#e8eef6" : "#f0b429"} />
+    </svg>
+  );
+}
+
 function HeroMedia({ poster, video }: { poster: string; video: string }) {
   const [useVideo, setUseVideo] = useState(true);
 
@@ -144,33 +169,13 @@ export function HomePage() {
   const locale = useLocale() as Locale;
   const site = getSite(locale);
   const prologueRef = useRef<HTMLElement>(null);
-  const lightRef = useRef<HTMLDivElement>(null);
   const techRef = useRef<HTMLElement>(null);
   const [fill, setFill] = useState(0);
-  const [lightOpacity, setLightOpacity] = useState(0);
   const [techProgress, setTechProgress] = useState(0);
-  const [clock, setClock] = useState({ t: 0.5, day: true });
-
-  useEffect(() => {
-    const tick = () => {
-      const minutes = jakartaMinutes();
-      const day = minutes >= 6 * 60 && minutes <= 18 * 60;
-      const tPosition = day
-        ? (minutes - 6 * 60) / (12 * 60)
-        : minutes < 6 * 60
-          ? (minutes / (6 * 60)) * 0.08
-          : 0.92 + ((minutes - 18 * 60) / (6 * 60)) * 0.08;
-      setClock({ t: Math.min(1, Math.max(0, tPosition)), day });
-    };
-    tick();
-    const id = window.setInterval(tick, 30000);
-    return () => window.clearInterval(id);
-  }, []);
 
   useEffect(() => {
     const onScroll = () => {
       const prologue = prologueRef.current;
-      const light = lightRef.current;
       const tech = techRef.current;
       if (prologue) {
         const rect = prologue.getBoundingClientRect();
@@ -178,14 +183,6 @@ export function HomePage() {
         const end = window.innerHeight * 0.28;
         const value = (start - rect.top) / (start - end);
         setFill(Math.min(1, Math.max(0, value)));
-      }
-      if (light) {
-        const rect = light.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const distance = Math.abs(center - window.innerHeight * 0.58);
-        setLightOpacity(
-          1 - Math.min(1, distance / (window.innerHeight * 0.72)),
-        );
       }
       if (tech) {
         const rect = tech.getBoundingClientRect();
@@ -202,7 +199,6 @@ export function HomePage() {
   const slides = site.techSlides;
   const slidePosition = techProgress * Math.max(slides.length - 1, 1);
   const activeSlide = Math.round(slidePosition);
-  const sun = arcPoint(clock.t);
   const socialImages = [
     site.images.harvest,
     site.images.aisle,
@@ -249,15 +245,16 @@ export function HomePage() {
 
       <section
         ref={prologueRef}
-        className="mx-auto max-w-[1440px] px-5 py-20 md:px-16 md:py-28"
+        className="bg-paper"
       >
+        <div className="mx-auto w-full max-w-[1440px] px-5 py-16 md:px-16">
         <div className="grid items-center gap-10 md:grid-cols-[1.15fr_0.85fr]">
           <p
             className="text-3xl leading-snug font-medium tracking-tight md:text-[2.65rem] md:leading-[1.25]"
             style={{
               color: "transparent",
               backgroundImage:
-                "linear-gradient(#131518, #131518), linear-gradient(#c5c9d2, #c5c9d2)",
+                "linear-gradient(var(--fill-ink), var(--fill-ink)), linear-gradient(var(--fill-track), var(--fill-track))",
               backgroundSize: `100% ${fill * 100}%, 100% 100%`,
               backgroundRepeat: "no-repeat",
               WebkitBackgroundClip: "text",
@@ -272,33 +269,8 @@ export function HomePage() {
           />
         </div>
 
-        <div
-          ref={lightRef}
-          className="relative mx-auto mt-16 max-w-4xl transition-opacity duration-300"
-          style={{ opacity: lightOpacity }}
-        >
-          <svg viewBox="0 0 1000 210" className="w-full">
-            <path
-              d="M48 168 Q 500 18 952 168"
-              fill="none"
-              stroke="#d5d7de"
-              strokeDasharray="2 7"
-              strokeLinecap="round"
-            />
-            <circle
-              cx={sun.x}
-              cy={sun.y}
-              r="28"
-              fill={clock.day ? "#f6c453" : "#d7dee8"}
-              opacity="0.35"
-            />
-            <circle
-              cx={sun.x}
-              cy={sun.y}
-              r="14"
-              fill={clock.day ? "#f0b429" : "#eef2f6"}
-            />
-          </svg>
+        <div className="relative mx-auto mt-10 w-full max-w-4xl">
+          <CelestialArc />
           <div className="mx-auto -mt-6 max-w-xs text-center">
             <p className="text-lg text-brand">{t("lightTitle")}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -306,10 +278,11 @@ export function HomePage() {
             </p>
           </div>
         </div>
+        </div>
       </section>
 
-      <section ref={techRef} className="relative h-[280vh]">
-        <div className="sticky top-0 flex h-[100svh] items-center">
+      <section ref={techRef} className="relative z-30 h-[280vh]">
+        <div className="sticky top-0 flex min-h-[100svh] items-center bg-paper py-16">
           <div className="mx-auto grid w-full max-w-[1440px] items-center gap-8 px-5 md:grid-cols-[1.15fr_0.85fr] md:px-16">
             <div>
               <p className="text-xs tracking-[0.16em] text-brand">
@@ -341,8 +314,8 @@ export function HomePage() {
                     onClick={() => scrollToSlide(index)}
                     className={`px-3 py-1.5 text-xs ${
                       index === activeSlide
-                        ? "bg-ink text-white"
-                        : "bg-white text-muted"
+                        ? "bg-[#131518] text-white"
+                        : "bg-white text-[#5c5c5c]"
                     }`}
                   >
                     {slide.tab}
@@ -376,7 +349,8 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1440px] px-5 pt-8 pb-6 md:px-16">
+      <section className="bg-paper">
+        <div className="mx-auto w-full max-w-[1440px] px-5 py-10 md:px-16">
         <p className="text-xs tracking-[0.16em] text-brand">
           {t("portalsKicker")}
         </p>
@@ -398,11 +372,13 @@ export function HomePage() {
             </Link>
           ))}
         </div>
+        </div>
       </section>
 
       <HexagonBand />
 
-      <section className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 md:grid-cols-[0.8fr_1.2fr] md:px-16">
+      <section className="bg-paper">
+        <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-5 py-16 md:grid-cols-[0.8fr_1.2fr] md:px-16">
         <div>
           <h2 className="text-4xl font-medium tracking-tight">
             {menu("journals")}
@@ -435,9 +411,11 @@ export function HomePage() {
             </Link>
           ))}
         </div>
+        </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1440px] items-stretch gap-0 px-5 py-10 md:grid-cols-2 md:px-16">
+      <section className="bg-paper">
+        <div className="mx-auto grid w-full max-w-[1440px] items-stretch gap-0 px-5 py-10 md:grid-cols-2 md:px-16">
         <div className="relative min-h-[440px]">
           <img
             src={site.images.partner}
@@ -455,7 +433,7 @@ export function HomePage() {
             ))}
           </div>
         </div>
-        <div className="flex flex-col justify-center bg-white px-6 py-12 md:px-12">
+        <div className="flex flex-col justify-center bg-white px-6 py-12 text-[#24272d] md:px-12">
           <h2 className="text-3xl leading-tight font-medium md:text-5xl">
             {t("partnerTitle")}
           </h2>
@@ -477,9 +455,11 @@ export function HomePage() {
             </Link>
           </div>
         </div>
+        </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1440px] items-center gap-8 px-5 py-16 md:grid-cols-2 md:px-16">
+      <section className="bg-paper">
+        <div className="mx-auto grid w-full max-w-[1440px] items-center gap-8 px-5 py-16 md:grid-cols-2 md:px-16">
         <div>
           <h2 className="text-3xl leading-tight font-medium md:text-5xl">
             {t("careersTitle")}
@@ -497,10 +477,11 @@ export function HomePage() {
           alt=""
           className="aspect-[4/3] w-full object-cover"
         />
+        </div>
       </section>
 
       <section className="bg-[#1c291c] text-white">
-        <div className="mx-auto max-w-[1440px] px-5 py-16 md:px-16">
+        <div className="mx-auto w-full max-w-[1440px] px-5 py-16 md:px-16">
           <h2 className="max-w-xl text-3xl leading-tight font-medium md:text-5xl">
             {t("socialTitle")}
           </h2>

@@ -34,6 +34,21 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const [solidBar, setSolidBar] = useState(false);
   const [newsletter, setNewsletter] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [theme, setTheme] = useState<"day" | "night">("day");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("soofresh-theme");
+    const next = stored === "night" ? "night" : "day";
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+  }, []);
+
+  const chooseTheme = (next: "day" | "night") => {
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("soofresh-theme", next);
+    window.dispatchEvent(new Event("soofresh-theme"));
+  };
 
   useEffect(() => {
     let last = window.scrollY;
@@ -76,7 +91,13 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <header
         className={`fixed inset-x-0 top-0 z-40 transition duration-300 ${
           hidden && !open ? "-translate-y-full" : "translate-y-0"
-        } ${solid ? "bg-paper text-ink" : "bg-transparent text-ink"}`}
+        } ${
+          solid
+            ? "bg-paper text-ink"
+            : theme === "night"
+              ? "bg-transparent text-white"
+              : "bg-transparent text-ink"
+        }`}
       >
         <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-4 px-4 md:h-20 md:px-10">
           <button
@@ -95,7 +116,28 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
             <LeafMark />
           </Link>
           <div className="ml-auto flex items-center gap-3 md:gap-5">
-            <JakartaClock className="hidden text-[11px] tracking-wide text-ink sm:block" />
+            <JakartaClock className="hidden text-[11px] tracking-wide text-current sm:block" />
+            <div className="flex items-center text-[11px] tracking-wide" role="group" aria-label={t("nav.theme")}>
+              <button
+                type="button"
+                aria-pressed={theme === "day"}
+                className={theme === "day" ? "text-brand" : "text-current"}
+                onClick={() => chooseTheme("day")}
+              >
+                {t("nav.day")}
+              </button>
+              <span className="px-1 opacity-40" aria-hidden="true">
+                /
+              </span>
+              <button
+                type="button"
+                aria-pressed={theme === "night"}
+                className={theme === "night" ? "text-brand" : "text-current"}
+                onClick={() => chooseTheme("night")}
+              >
+                {t("nav.night")}
+              </button>
+            </div>
             <Link
               href={customer ? "/account" : "/sign-in"}
               className={`px-3 py-2 text-sm ${solid ? "bg-brand text-white" : "bg-brand text-white"}`}
@@ -332,7 +374,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
             <rect
               width="1440"
               height="430"
-              fill="#f9f9f9"
+              fill="var(--paper)"
               mask="url(#soofresh-wordmark)"
             />
           </svg>

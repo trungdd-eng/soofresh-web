@@ -24,8 +24,16 @@ export default async function RootLayout({
   const locale = headerList.get("X-NEXT-INTL-LOCALE") ?? "id";
 
   return (
-    <html lang={locale} className={`${geist.variable} h-full antialiased`}>
-      <body className="min-h-full bg-paper text-ink">{children}</body>
+    <html lang={locale} className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-full bg-paper text-ink">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('soofresh-theme');if(t==='night'||t==='day')document.documentElement.dataset.theme=t;}catch(e){}",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
