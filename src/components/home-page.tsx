@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { getSite } from "@/content/site";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -139,6 +139,53 @@ function CelestialArc() {
   );
 }
 
+function usePinTop<T extends HTMLElement>(ref: RefObject<T | null>) {
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const fit = () => {
+      const extra = node.offsetHeight - window.innerHeight;
+      node.style.top = extra > 8 ? `${-extra}px` : "0px";
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(node);
+    window.addEventListener("resize", fit);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", fit);
+    };
+  }, [ref]);
+}
+
+function OverlapSheet({
+  zIndex,
+  className = "",
+  children,
+  sectionRef,
+  shadow = true,
+}: {
+  zIndex: number;
+  className?: string;
+  children: ReactNode;
+  sectionRef?: RefObject<HTMLElement | null>;
+  shadow?: boolean;
+}) {
+  const localRef = useRef<HTMLElement>(null);
+  const ref = sectionRef ?? localRef;
+  usePinTop(ref);
+
+  return (
+    <section
+      ref={ref}
+      className={`sticky ${shadow ? "shadow-[0_-28px_60px_rgba(0,0,0,0.16)]" : ""} ${className}`}
+      style={{ zIndex }}
+    >
+      {children}
+    </section>
+  );
+}
+
 function HeroMedia({ poster, video }: { poster: string; video: string }) {
   const [useVideo, setUseVideo] = useState(true);
 
@@ -169,7 +216,7 @@ export function HomePage() {
   const locale = useLocale() as Locale;
   const site = getSite(locale);
   const prologueRef = useRef<HTMLElement>(null);
-  const techRef = useRef<HTMLElement>(null);
+  const techRef = useRef<HTMLDivElement>(null);
   const [fill, setFill] = useState(0);
   const [techProgress, setTechProgress] = useState(0);
 
@@ -186,8 +233,11 @@ export function HomePage() {
       }
       if (tech) {
         const rect = tech.getBoundingClientRect();
-        const total = rect.height - window.innerHeight;
-        const passed = Math.min(Math.max(-rect.top, 0), Math.max(total, 1));
+        const total = rect.height;
+        const passed = Math.min(
+          Math.max(window.innerHeight - rect.top, 0),
+          Math.max(total, 1),
+        );
         setTechProgress(total > 0 ? passed / total : 0);
       }
     };
@@ -210,17 +260,20 @@ export function HomePage() {
     const node = techRef.current;
     if (!node) return;
     const rect = node.getBoundingClientRect();
-    const start = window.scrollY + rect.top;
-    const total = node.offsetHeight - window.innerHeight;
+    const start = window.scrollY + rect.top - window.innerHeight;
     window.scrollTo({
-      top: start + (total * index) / Math.max(slides.length - 1, 1),
+      top: start + (node.offsetHeight * index) / Math.max(slides.length - 1, 1),
       behavior: "smooth",
     });
   };
 
   return (
     <div>
-      <section className="relative min-h-[100svh] overflow-hidden text-white">
+      <OverlapSheet
+        zIndex={10}
+        shadow={false}
+        className="min-h-[100svh] overflow-hidden text-white"
+      >
         <HeroMedia poster={site.images.hero} video={site.images.heroVideo} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/15" />
         <div className="relative mx-auto flex min-h-[100svh] max-w-[1440px] flex-col justify-end px-5 pt-28 pb-10 md:px-16 md:pb-14">
@@ -241,11 +294,12 @@ export function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </OverlapSheet>
 
-      <section
-        ref={prologueRef}
-        className="bg-paper"
+      <OverlapSheet
+        zIndex={12}
+        sectionRef={prologueRef}
+        className="flex min-h-[100svh] flex-col justify-center bg-paper"
       >
         <div className="mx-auto w-full max-w-[1440px] px-5 py-16 md:px-16">
         <div className="grid items-center gap-10 md:grid-cols-[1.15fr_0.85fr]">
@@ -279,11 +333,13 @@ export function HomePage() {
           </div>
         </div>
         </div>
-      </section>
+      </OverlapSheet>
 
-      <section ref={techRef} className="relative z-30 h-[280vh]">
-        <div className="sticky top-0 flex min-h-[100svh] items-center bg-paper py-16">
-          <div className="mx-auto grid w-full max-w-[1440px] items-center gap-8 px-5 md:grid-cols-[1.15fr_0.85fr] md:px-16">
+      <OverlapSheet
+        zIndex={14}
+        className="flex h-[100svh] items-center overflow-hidden bg-paper py-6 md:py-10"
+      >
+          <div className="mx-auto grid w-full max-w-[1440px] items-center gap-6 px-5 md:grid-cols-[1.15fr_0.85fr] md:gap-8 md:px-16">
             <div>
               <p className="text-xs tracking-[0.16em] text-brand">
                 {t("techKicker")}
@@ -294,7 +350,7 @@ export function HomePage() {
                     key={slide.id}
                     src={slide.image}
                     alt=""
-                    className="aspect-[16/10] w-full object-cover transition-opacity duration-500"
+                    className="aspect-[16/10] max-h-[34svh] w-full object-cover transition-opacity duration-500 md:max-h-[46svh]"
                     style={{
                       opacity: Math.max(
                         0,
@@ -323,7 +379,7 @@ export function HomePage() {
                 ))}
               </div>
             </div>
-            <div className="relative h-72 md:h-80">
+            <div className="relative h-52 md:h-80">
               {slides.map((slide, index) => {
                 const distance = slidePosition - index;
                 return (
@@ -346,10 +402,10 @@ export function HomePage() {
               })}
             </div>
           </div>
-        </div>
-      </section>
+      </OverlapSheet>
+      <div ref={techRef} className="pointer-events-none h-[180vh]" aria-hidden="true" />
 
-      <section className="bg-paper">
+      <OverlapSheet zIndex={16} className="min-h-[100svh] bg-paper">
         <div className="mx-auto w-full max-w-[1440px] px-5 py-10 md:px-16">
         <p className="text-xs tracking-[0.16em] text-brand">
           {t("portalsKicker")}
@@ -373,11 +429,10 @@ export function HomePage() {
           ))}
         </div>
         </div>
-      </section>
+        <HexagonBand />
+      </OverlapSheet>
 
-      <HexagonBand />
-
-      <section className="bg-paper">
+      <OverlapSheet zIndex={18} className="flex min-h-[100svh] flex-col justify-center bg-paper">
         <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-5 py-16 md:grid-cols-[0.8fr_1.2fr] md:px-16">
         <div>
           <h2 className="text-4xl font-medium tracking-tight">
@@ -412,9 +467,9 @@ export function HomePage() {
           ))}
         </div>
         </div>
-      </section>
+      </OverlapSheet>
 
-      <section className="bg-paper">
+      <OverlapSheet zIndex={20} className="flex min-h-[100svh] flex-col justify-center bg-paper">
         <div className="mx-auto grid w-full max-w-[1440px] items-stretch gap-0 px-5 py-10 md:grid-cols-2 md:px-16">
         <div className="relative min-h-[440px]">
           <img
@@ -456,9 +511,9 @@ export function HomePage() {
           </div>
         </div>
         </div>
-      </section>
+      </OverlapSheet>
 
-      <section className="bg-paper">
+      <OverlapSheet zIndex={22} className="flex min-h-[100svh] flex-col justify-center bg-paper">
         <div className="mx-auto grid w-full max-w-[1440px] items-center gap-8 px-5 py-16 md:grid-cols-2 md:px-16">
         <div>
           <h2 className="text-3xl leading-tight font-medium md:text-5xl">
@@ -478,9 +533,12 @@ export function HomePage() {
           className="aspect-[4/3] w-full object-cover"
         />
         </div>
-      </section>
+      </OverlapSheet>
 
-      <section className="bg-[#1c291c] text-white">
+      <OverlapSheet
+        zIndex={24}
+        className="flex min-h-[100svh] flex-col justify-center bg-[#1c291c] text-white"
+      >
         <div className="mx-auto w-full max-w-[1440px] px-5 py-16 md:px-16">
           <h2 className="max-w-xl text-3xl leading-tight font-medium md:text-5xl">
             {t("socialTitle")}
@@ -512,7 +570,7 @@ export function HomePage() {
             })}
           </div>
         </div>
-      </section>
+      </OverlapSheet>
     </div>
   );
 }
